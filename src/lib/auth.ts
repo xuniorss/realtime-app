@@ -1,6 +1,7 @@
 import { UpstashRedisAdapter } from '@next-auth/upstash-redis-adapter'
-import { NextAuthOptions, getServerSession } from 'next-auth'
+import { getServerSession, NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+
 import { db } from './db'
 
 const getGoogleProviders = () => {
@@ -19,6 +20,7 @@ export const authOptions: NextAuthOptions = {
 	adapter: UpstashRedisAdapter(db),
 	session: { strategy: 'jwt' },
 	pages: { signIn: '/login' },
+	debug: process.env.NODE_ENV === 'development',
 	providers: [
 		GoogleProvider({
 			clientId: getGoogleProviders().clientId,
