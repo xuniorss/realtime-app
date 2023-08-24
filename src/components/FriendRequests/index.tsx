@@ -22,7 +22,7 @@ export const FriendRequests = ({
 
 	const acceptFriend = useCallback(
 		async (senderId: string) => {
-			await axios.post('/api/requests/accept', { id: senderId })
+			await axios.post('/api/friends/accept', { id: senderId })
 
 			setFriendRequests((prev) =>
 				prev.filter((request) => request.senderId !== senderId),
@@ -35,7 +35,7 @@ export const FriendRequests = ({
 
 	const denyFriend = useCallback(
 		async (senderId: string) => {
-			await axios.post('/api/requests/deny', { id: senderId })
+			await axios.post('/api/friends/deny', { id: senderId })
 
 			setFriendRequests((prev) =>
 				prev.filter((request) => request.senderId !== senderId),
@@ -60,6 +60,7 @@ export const FriendRequests = ({
 						<UserPlus className="text-black" />
 						<p className="text-lg font-medium">{request.senderEmail}</p>
 						<button
+							onClick={() => acceptFriend(request.senderId)}
 							aria-label="accept friend"
 							className="grid h-8 w-8 place-items-center rounded-full bg-indigo-600 transition hover:bg-indigo-700 hover:shadow-md"
 						>
@@ -67,6 +68,7 @@ export const FriendRequests = ({
 						</button>
 
 						<button
+							onClick={() => denyFriend(request.senderId)}
 							aria-label="deny friend"
 							className="grid h-8 w-8 place-items-center rounded-full bg-red-600 transition hover:bg-red-700 hover:shadow-md"
 						>
