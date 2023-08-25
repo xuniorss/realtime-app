@@ -1,4 +1,5 @@
 import { Icon, Icons } from '@/components/Icons'
+import { getFriendsByUserId } from '@/helpers/get-friends-by-user-id'
 import { fetchRedis } from '@/helpers/redis'
 import { getAuthSession } from '@/lib/auth'
 import type { Metadata } from 'next'
@@ -34,6 +35,8 @@ export default async function DashboardLayout({
 
 	if (!session) notFound()
 
+	const friends = await getFriendsByUserId(session.user.id)
+
 	const unseenRequestCount = (
 		(await fetchRedis(
 			'smembers',
@@ -48,14 +51,17 @@ export default async function DashboardLayout({
 					<Icons.logo className="h-8 w-auto text-indigo-600" />
 				</Link>
 
-				<h1 className="text-xs font-semibold leading-6 text-gray-400">
-					Seus bate-papos
-				</h1>
+				{friends.length > 0 && (
+					<h1 className="text-xs font-semibold leading-6 text-gray-400">
+						Seus bate-papos
+					</h1>
+				)}
 
 				<Navbar
 					session={session}
 					sidebarOptions={sidebarOptions}
 					unseenRequestCount={unseenRequestCount}
+					friends={friends}
 				/>
 			</aside>
 			<main className="container max-h-screen w-full py-16 md:py-12">

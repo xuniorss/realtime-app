@@ -3,23 +3,28 @@ import { Session } from 'next-auth'
 import Link from 'next/link'
 import { SidebarOption } from '../../layout'
 import { FriendRequestSidebarOption } from '../FriendRequestSidebarOption'
+import { SidebarChatList } from '../SidebarChatList'
 import { SignOutButton } from '../SignOutButton'
 
 interface NavbarProps {
 	session: Session
 	sidebarOptions: SidebarOption[]
 	unseenRequestCount: number
+	friends: User[]
 }
 
 export const Navbar = ({
 	session,
 	sidebarOptions,
 	unseenRequestCount,
+	friends = [],
 }: NavbarProps) => {
 	return (
 		<nav className="flex flex-1 flex-col">
 			<ul role="list" className="flex flex-1 flex-col gap-y-7">
-				<li>chats that this user has</li>
+				<li>
+					<SidebarChatList friends={friends} />
+				</li>
 				<li>
 					<h2 className="text-xs font-semibold leading-6 text-gray-400">
 						Visão geral
@@ -41,14 +46,13 @@ export const Navbar = ({
 								</li>
 							)
 						})}
+						<li>
+							<FriendRequestSidebarOption
+								sessionId={session.user.id}
+								initialUnseenRequestsCount={unseenRequestCount}
+							/>
+						</li>
 					</ul>
-				</li>
-
-				<li>
-					<FriendRequestSidebarOption
-						sessionId={session.user.id}
-						initialUnseenRequestsCount={unseenRequestCount}
-					/>
 				</li>
 
 				<li className="-mx-6 mt-auto flex items-center">
